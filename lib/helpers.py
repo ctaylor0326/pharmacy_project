@@ -1,29 +1,62 @@
+from sqlalchemy.orm import sessionmaker
+from sqlalchemy import create_engine
+from db.models import *
 
+engine = create_engine('sqlite:///pharmacy.db')
+Session = sessionmaker(bind=engine)
+session = Session()
 
-def create_prescription_table(patient)
+def create_prescription_table(patient):
+
+    # retrieve orders for the patient ID
+
     
-    # print table header
-    # placeholder header columns to be adjusted to match database
-    print(f"{'ID':<5}{'Name':<20}{'Quantity':<10}{'Refills':<10}{'Last Refill':<15}{'Expiration':<15}")
-    print('-' * 75)
+    #print table header
+    header = f"{'ID':<5}{'Medication':<15}{'Dosage':<10}{'Quantity':<10}{'Price':<10}"
+    print(header)
+    print('-' * len(header))
 
     # print table rows
-    for prescription in patient.prescriptions:
-        print(f"{prescription.id:<5}{prescription.name:<20}{prescription.quantity:<10}{prescription.refills:<10}{prescription.last_refill:<15}{prescription.expiration:<15}")
+    row = f"{prescription.id:<5}{prescription.name:<15}{prescription.dosage:<10}{prescription.quantity:<10}{prescription.price:<10}"
+    print(row)
 
-def fill_prescription_cart(patient):
-    prescription_cart = []
+    print('-' * len(header))
+
+
+    # pass prescription id to fill prescription menu
+
+
+def fill_prescription_menu():
     while True:
-        prescription_id = input('Please enter the ID of the prescription you would like to fill, or enter "done" to complete your order: ')
-        if prescription_id == 'done':
+        print('1. Fill prescription')
+        print('2. Cancel prescription')
+        print('3. Exit')
+        choice = input()
+
+        if choice == '1':
+            # set prescription pick up time
+            print('Thank you for your order! Your prescriptions will be ready for pick up in 15 minutes.')
+            print(walgreenz_image)
             break
-        prescription = session.query(Prescription).filter(Prescription.id == prescription_id).one_or_none()
-        if prescription:
-            prescription_cart.append(prescription)
+
+        elif choice == '2':
+            # cancel prescription
+            print('Your prescription has been cancelled.')
+            print("Thank you for choosing Walgreenz!")
+            print(walgreenz_image)
+            break
+
+        elif choice == '3':
+            # exit
+            print('Your prescription will not be filled.')
+            print("Thank you for choosing Walgreenz!")
+            print(walgreenz_image)
+            break
+
         else:
-            print('Invalid ID. Please try again.')
-        return prescription_cart
-    
+            # invalid choice
+            print('Invalid choice. Please try again.')
+
 
 
 
@@ -31,7 +64,7 @@ greeting_image = """
               _________
              {_________}
               )=======(
-             /         \
+             |         |
             | _________ |
             ||   _     ||
             ||  |_)    ||
