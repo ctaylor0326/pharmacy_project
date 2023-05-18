@@ -41,6 +41,7 @@ class Patient(Base):
     last_name = Column(String())
     first_name = Column(String())
     address = Column(String())
+    password = Column(String())
     prescriptions = relationship('Prescription', back_populates='patient')
     medications = association_proxy(
         'prescriptions', 'medication', creator=lambda us: Prescription(medication=us))
@@ -53,7 +54,7 @@ class ShoppingCart(Base):
     __tablename__ = 'shopping_carts'
     id = Column(Integer(), primary_key=True)
     script_id = Column(Integer(), ForeignKey('medications.id'))
-    otc_id = Column(Integer(), ForeignKey('otc.id'))
+    # otc_id = Column(Integer(), ForeignKey('otc.id'))
     name = Column(String())
     price = Column(Float(precision=8, asdecimal=True, decimal_return_scale=2))
     
