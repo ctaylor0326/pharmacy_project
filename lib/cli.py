@@ -48,7 +48,7 @@ def print_16_slowly(output):
 
 
 #/////////////////////////////////////////////////////////
-#////                        navication and menu functions
+#////                        navigation and menu functions
 #/////////////////////////////////////////////////////////
 
 def pre_menu():
@@ -58,9 +58,7 @@ def pre_menu():
         print(walgreenz_image)
         print_1_slowly(greeting_image)
         print()
-        print_4_slowly('Welcome to Walgreenz!')
-        print_8_slowly('Welc o m e  t o  W a l g r e e n z !')
-        print_16_slowly('W e l c o  m  e   t  o   W  a  l  g  r  e  e  n  z  !')
+        print_8_slowly('W e l c o m e  t o  W a l g r e e n z !')
         print('-' * 50)
         main_menu()
     
@@ -75,21 +73,21 @@ def main_menu():
         print_8_slowly("3.|   S h o p p i n g   C a r t")
         print_16_slowly("4.|   E X I T")
         print('-' * 50)
-        input("Please enter a number from the menu above: ")
+        main_menu_input = input("Please enter a number from the menu above: ")
         print('-' * 50)
 
-        if input == '1':
+        if main_menu_input == '1':
             login()
 
-        elif input == '2':
+        elif main_menu_input == '2':
              otc()
 
-        elif input == '3':
+        elif main_menu_input == '3':
             shopping_cart()
 
-        elif input == '4':
+        elif main_menu_input == '4':
             print(walgreenz_image)
-            print_max_slowly('T h a n k   y o u   f o r   c h o o s i n g   W a l g r e e n z !')
+            print_16_slowly('T h a n k   y o u   f o r   c h o o s i n g   W a l g r e e n z !')
             exit()
 
         else:
@@ -111,6 +109,46 @@ def login():
         print()
         # user_greeting(patient)
         user_greeting()
+
+
+def otc():
+    click.clear()
+    print_1_slowly(over_the_counter_image)
+    print('-' * 50)
+    print()
+    print()
+    otc_input = input('enter 1 for Main Menu or 2 for Exit: ')
+     
+    if otc_input == '1':
+          main_menu()
+
+    elif otc_input == '2':
+        print(walgreenz_image)
+        print_16_slowly('T h a n k   y o u   f o r   c h o o s i n g   W a l g r e e n z !')
+        exit()
+
+    else:
+        print('Invalid choice. Please try again.')
+
+
+def shopping_cart():
+    click.clear()
+    print_1_slowly(shopping_cart_image)
+    print('-' * 50)
+    print()
+    print()
+    shopping_cart_input = input('enter 1 for Main Menu or 2 for Exit: ')
+     
+    if shopping_cart_input == '1':
+          main_menu()
+
+    elif shopping_cart_input == '2':
+        print(walgreenz_image)
+        print_16_slowly('T h a n k   y o u   f o r   c h o o s i n g   W a l g r e e n z !')
+        exit()
+
+    else:
+        print('Invalid choice. Please try again.')
 
 
 # def user_greeting(patient):
