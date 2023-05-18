@@ -6,60 +6,6 @@ engine = create_engine('sqlite:///pharmacy.db')
 Session = sessionmaker(bind=engine)
 session = Session()
 
-def create_prescription_table(patient):
-
-    # retrieve orders for the patient ID
-
-    
-    #print table header
-    header = f"{'ID':<5}{'Medication':<15}{'Dosage':<10}{'Quantity':<10}{'Price':<10}"
-    print(header)
-    print('-' * len(header))
-
-    # print table rows
-    row = f"{prescription.id:<5}{prescription.name:<15}{prescription.dosage:<10}{prescription.quantity:<10}{prescription.price:<10}"
-    print(row)
-
-    print('-' * len(header))
-
-
-    # pass prescription id to fill prescription menu
-
-
-def fill_prescription_menu():
-    while True:
-        print('1. Fill prescription')
-        print('2. Cancel prescription')
-        print('3. Exit')
-        choice = input()
-
-        if choice == '1':
-            # set prescription pick up time
-            print('Thank you for your order! Your prescriptions will be ready for pick up in 15 minutes.')
-            print(walgreenz_image)
-            break
-
-        elif choice == '2':
-            # cancel prescription
-            print('Your prescription has been cancelled.')
-            print("Thank you for choosing Walgreenz!")
-            print(walgreenz_image)
-            break
-
-        elif choice == '3':
-            # exit
-            print('Your prescription will not be filled.')
-            print("Thank you for choosing Walgreenz!")
-            print(walgreenz_image)
-            break
-
-        else:
-            # invalid choice
-            print('Invalid choice. Please try again.')
-
-
-
-
 greeting_image = """
               _________
              {_________}
@@ -75,11 +21,73 @@ greeting_image = """
 """
 
 walgreenz_image = """
-
  _       __      __                              
 | |     / /___ _/ /___ _________  ___  ____  ____
 | | /| / / __ `/ / __ `/ ___/ _ \/ _ \/ __ \/_  /
 | |/ |/ / /_/ / / /_/ / /  /  __/  __/ / / / / /_
 |__/|__/\__,_/_/\__, /_/   \___/\___/_/ /_/ /___/
                /____/                            
+"""
+
+shopping_cart_image = """
+   ______                 _         
+  / __/ / ___  ___  ___  (____ ___ _
+ _\ \/ _ / _ \/ _ \/ _ \/ / _ / _ `/
+/___/_//_\___/ .__/ .__/_/__/_\_, / 
+            _______/_____/ /_/___/  
+           / __/ _ `/ __/ __/       
+           \__/\_,_/_/  \__/      
+"""
+
+over_the_counter_image = """
+  ____                 __  __     
+ / __ \_  _____ ____  / /_/ / ___ 
+/ /_/ | |/ / -_/ ____/ __/ _ / -_)
+\__________\_____ / /___________/ 
+/ __/ _ / // / _ / __/ -_/ __/    
+\__/\___\_,_/_//_\__/\__/_/  
+"""
+
+login_image = """
+   __           _    
+  / / ___ ___ _(____ 
+ / /_/ _ / _ `/ / _ \
+/____\___\_, /_/_//_/
+        /___/        
+"""
+
+sign_up_image = """
+   _____                     
+  / __(____ ____    __ _____ 
+ _\ \/ / _ `/ _ \  / // / _ \
+/___/_/\_, /_//_/  \_,_/ .__/
+      /___/           /_/    
+"""
+
+main_menu_image = """
+   __  ___     _        
+  /  |/  ___ _(____     
+ / /|_/ / _ `/ / _ \    
+/_/  __/\___/_/_//_/    
+    /  |/  ___ ___ __ __
+   / /|_/ / -_/ _ / // /
+  /_/  /_/\__/_//_\_,_/ 
+"""
+
+welcome_back_image = """
+  _      __    __                 
+ | | /| / ___ / _______  __ _ ___ 
+ | |/ |/ / -_/ / __/ _ \/  ' / -_)
+ |__/|__/\____/\__/\___/___/_\__/ 
+          / / ___ _____/ /__      
+         / _ / _ `/ __/  '_/      
+        /_.__\_,_/\__/_/\_\ 
+"""
+
+prescriptions_image = """
+   ___                     _     __  _             
+  / _ \_______ ___________(____ / /_(____  ___  ___
+ / ___/ __/ -_(_-/ __/ __/ / _ / __/ / _ \/ _ \(_-<
+/_/  /_/  \__/___\__/_/ /_/ .__\__/_/\___/_//_/___/
+                         /_/ 
 """

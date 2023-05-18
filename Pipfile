@@ -8,6 +8,8 @@ ipdb = "*"
 sqlalchemy = "*"
 alembic = "*"
 "sqlalchemy.orm" = "*"
+click = "*"
+tabulate = "*"
 
 [dev-packages]
 

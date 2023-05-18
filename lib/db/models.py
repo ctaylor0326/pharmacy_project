@@ -1,14 +1,14 @@
-from sqlalchemy import (ForeignKey, Column, Integer, String, Float)
-from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy import (ForeignKey, Column, Integer, String, Float, create_engine)
+from sqlalchemy.orm import Session, declarative_base
 
 # engine = create_engine('sqlite:///pharmacy.db')
 
 Base = declarative_base()
 
-class Prescription(Base):
+class Medication(Base):
    
 
-    __tablename__ = 'prescriptions'
+    __tablename__ = 'medications'
 
     id = Column(Integer(), primary_key=True)
     name = Column(String())
@@ -18,9 +18,10 @@ class Prescription(Base):
 
 
     def __repr__(self):
-        return f'Prescription(id={self.id}, ' + \
-            f'name={self.name}, ' + \
-            f'price={self.price})'
+        return f'Medication:{self.name} Quantity:{self.quantity} Price:{self.price}'
+        # return f'Medication:' + \
+        #     f'name={self.name}, ' + \
+        #     f'price={self.price})'
     
 
 class Patient(Base):
@@ -35,8 +36,8 @@ class Patient(Base):
     def __repr__(self):
         return f'{self.first_name} {self.last_name})'
 
-class Order(Base):
-    __tablename__ = 'orders'
+class Prescription(Base):
+    __tablename__ = 'prescriptions'
 
     id = Column(Integer(), primary_key=True)
     patient_id = Column(Integer(), ForeignKey('patients.id'))
@@ -47,3 +48,13 @@ class ShoppingCart(Base):
     __tablename__ = 'shopping_carts'
 
     id = Column(Integer(), primary_key=True)
+
+
+if __name__ == '__main__':
+    engine = create_engine('sqlite:///pharmacy.db')
+    
+    Base.metadata.create_all(engine)
+
+
+
+   
