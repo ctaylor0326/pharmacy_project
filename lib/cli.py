@@ -1,5 +1,4 @@
 import subprocess
-from helpers import *
 from ascii import *
 from db.otc import *
 from db.models import *
@@ -352,7 +351,7 @@ def pain_relief():
 
     print('-' * 50)
 
-    fill_cart()
+    otc_fill_cart(session, otc_item)
 
 #//////////////////////allergy relief////
 
@@ -378,7 +377,7 @@ def allergy_relief():
     
     print('-' * 50)
 
-    fill_cart()
+    otc_fill_cart(session, otc_item)
 
 #//////////////////////cold & flu////
 
@@ -404,7 +403,7 @@ def cold_and_flu():
     
     print('-' * 50)
 
-    fill_cart()
+    otc_fill_cart(session, otc_item)
 
 #//////////////////////see all otc items////
 
@@ -430,25 +429,37 @@ def see_all_otc():
     
     print('-' * 50)
 
-    fill_cart()
+    otc_fill_cart(session, otc_item)
 
 #//////////////////////////////////////////////////////////////
 #////                                            fill cart ////
 #//////////////////////////////////////////////////////////////
 
-def fill_cart():
-    print("Enter item id to add to cart: ")
+def otc_fill_cart(session, otc_item):
+    shopping_cart = ShoppingCart()
+    otc_item_id = input('Please enter the ID of the item you would like to add to your cart: ')
+    cart_total = 0
+    while otc_item_id:
+        otc_item = session.query(Otc).filter(Otc.id == otc_item_id).one_or_none()
+        if otc_item:
+            cart_total += otc_item.price
+            print(f'Your cart total is ${cart_total:.2f}')
+            otc_item_id = input('Please enter the ID of the item you would like to add to your cart: ')
+        else:
+            print('Invalid ID. Please try again.')
+            otc_item_id = input('Please enter the ID of the item you would like to add to your cart: ')
+
     print()
     print('-' * 50)
     print()
-    fill_cart_input = input('Please enter 1 to return to the main menu or 2 to exit: ')
+    fill_cart_menu_input = input('Please enter 1 to return to the main menu or 2 to exit: ')
     print()
     print('-' * 50)
 
-    if fill_cart_input == '1':
+    if fill_cart_menu_input == '1':
         main_menu()
     
-    elif fill_cart_input == '2':
+    elif fill_cart_menu_input == '2':
         click.clear()
         print(walgreenz_image)
         print_4_slowly('T h a n k   y o u   f o r   c h o o s i n g   W a l g r e e n z !')
