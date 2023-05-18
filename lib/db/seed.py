@@ -9,11 +9,12 @@ fake = Faker()
 
 engine = create_engine('sqlite:///pharmacy.db')
 with Session(engine) as session:
-    for i in range(100):
-        newPatient = Patient(
-            last_name = fake.last_name(),
-            first_name = fake.first_name(),
-            address = fake.address()
-        )
-        session.add(newPatient)
-        session.commit()
+    # to populate patient database:
+    # for i in range(100):
+    #     newPatient = Patient(
+    #         last_name = fake.last_name(),
+    #         first_name = fake.first_name(),
+    #         address = fake.address()
+    #     )
+    #     session.add(newPatient)
+    #     session.commit()
