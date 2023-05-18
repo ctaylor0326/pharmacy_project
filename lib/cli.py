@@ -118,6 +118,10 @@ def main_menu():
             shopping_cart()
 
         elif main_menu_input == '5':
+            click.clear()
+            print(walgzbot_image)
+            print('-' * 50)
+            print()
             subprocess.run(['python', 'lib/walgzbot.py'])
 
         elif main_menu_input == '6':
@@ -329,21 +333,23 @@ def otc_menu():
 def pain_relief():
     click.clear()
     print_1_slowly(pain_relief_image)
-    print('-' * 50)
-    print(f'|ID  |ITEM NAME{" " * 24}|ID  |CATEGORY{" " * 24}|PRICE{" " * 4}|')
-    print('-' * 50)
+    print('-' * 67)
+    print(f'| ID |{" " * 8}ITEM NAME{" " * 8}|{" " * 8}CATEGORY{" " * 8}|  PRICE  |')
+    print('-' * 67)
 
-    otc_items = session.query(Otc).all()
+    otc_items = session.query(Otc).filter_by(category = "Pain Reliever").all()
 
-    [otc_item for otc_item in otc_items if otc_item.category == 'Pain Relief']
-    id_spaces = 4 - len(str(otc_item.id))
-    name_spaces = 33 - len(otc_item.name)
-    category_spaces = 33 - len(otc_item.category)
-    price_spaces = 8 - len(f'{otc_item.price:.2f}')
-    output_string = f'|{otc_item.id}{" " * id_spaces}|' + \
-    f'{otc_item.name}{" " * name_spaces}|' + \
-    f'${otc_item.price:.2f}{" " * price_spaces}|'
-    print(output_string)
+    for otc_item in otc_items:
+        id_spaces = 4 - len(str(otc_item.id))
+        name_spaces = 26 - len(otc_item.name)
+        category_spaces = 24 - len(otc_item.category)
+        price_spaces = 8 - len(f'{otc_item.price:.2f}')
+        output_string = f'|{otc_item.id}{" " * id_spaces}|' + \
+        f'{otc_item.name}{" " * name_spaces}|' + \
+        f'{otc_item.category}{" " * category_spaces}|' + \
+        f'${otc_item.price:.2f}{" " * price_spaces}|'
+        print(output_string)
+
     print('-' * 50)
 
     fill_cart()
@@ -353,21 +359,23 @@ def pain_relief():
 def allergy_relief():
     click.clear()
     print_1_slowly(allergy_image)
-    print('-' * 50)
-    print(f'|ID  |ITEM NAME{" " * 24}|ID  |CATEGORY{" " * 24}|PRICE{" " * 4}|')
-    print('-' * 50)
+    print('-' * 67)
+    print(f'| ID |{" " * 8}ITEM NAME{" " * 8}|{" " * 8}CATEGORY{" " * 8}|  PRICE  |')
+    print('-' * 67)
 
-    otc_items = session.query(Otc).all()
+    otc_items = session.query(Otc).filter_by(category = "Allergy").all()
 
-    [otc_item for otc_item in otc_items if otc_item.category == 'Allergy']
-    id_spaces = 4 - len(str(otc_item.id))
-    name_spaces = 33 - len(otc_item.name)
-    category_spaces = 33 - len(otc_item.category)
-    price_spaces = 8 - len(f'{otc_item.price:.2f}')
-    output_string = f'|{otc_item.id}{" " * id_spaces}|' + \
-    f'{otc_item.name}{" " * name_spaces}|' + \
-    f'${otc_item.price:.2f}{" " * price_spaces}|'
-    print(output_string)
+    for otc_item in otc_items:
+        id_spaces = 4 - len(str(otc_item.id))
+        name_spaces = 26 - len(otc_item.name)
+        category_spaces = 24 - len(otc_item.category)
+        price_spaces = 8 - len(f'{otc_item.price:.2f}')
+        output_string = f'|{otc_item.id}{" " * id_spaces}|' + \
+        f'{otc_item.name}{" " * name_spaces}|' + \
+        f'{otc_item.category}{" " * category_spaces}|' + \
+        f'${otc_item.price:.2f}{" " * price_spaces}|'
+        print(output_string)
+    
     print('-' * 50)
 
     fill_cart()
@@ -377,21 +385,23 @@ def allergy_relief():
 def cold_and_flu():
     click.clear()
     print_1_slowly(cold_and_flu_image)
-    print('-' * 50)
-    print(f'|ID  |ITEM NAME{" " * 24}|ID  |CATEGORY{" " * 24}|PRICE{" " * 4}|')
-    print('-' * 50)
+    print('-' * 70)
+    print(f'| ID |{" " * 8}ITEM NAME{" " * 8}|{" " * 8}CATEGORY{" " * 8}|  PRICE  |')
+    print('-' * 70)
 
-    otc_items = session.query(Otc).all()
+    otc_items = session.query(Otc).filter_by(category = "Cold & Flu").all()
 
-    [otc_item for otc_item in otc_items if otc_item.category == 'Cold & Flu']
-    id_spaces = 4 - len(str(otc_item.id))
-    name_spaces = 33 - len(otc_item.name)
-    category_spaces = 33 - len(otc_item.category)
-    price_spaces = 8 - len(f'{otc_item.price:.2f}')
-    output_string = f'|{otc_item.id}{" " * id_spaces}|' + \
-    f'{otc_item.name}{" " * name_spaces}|' + \
-    f'${otc_item.price:.2f}{" " * price_spaces}|'
-    print(output_string)
+    for otc_item in otc_items:
+        id_spaces = 4 - len(str(otc_item.id))
+        name_spaces = 26 - len(otc_item.name)
+        category_spaces = 24 - len(otc_item.category)
+        price_spaces = 8 - len(f'{otc_item.price:.2f}')
+        output_string = f'|{otc_item.id}{" " * id_spaces}|' + \
+        f'{otc_item.name}{" " * name_spaces}|' + \
+        f'{otc_item.category}{" " * category_spaces}|' + \
+        f'${otc_item.price:.2f}{" " * price_spaces}|'
+        print(output_string)
+    
     print('-' * 50)
 
     fill_cart()
@@ -401,21 +411,23 @@ def cold_and_flu():
 def see_all_otc():
     click.clear()
     print_1_slowly(all_items_image)   
-    print('-' * 50)
-    print(f'|ID  |ITEM NAME{" " * 24}|ID  |CATEGORY{" " * 24}|PRICE{" " * 4}|')
-    print('-' * 50)
+    print('-' * 67)
+    print(f'| ID |{" " * 8}ITEM NAME{" " * 8}|{" " * 8}CATEGORY{" " * 8}|  PRICE  |')
+    print('-' * 67)
 
     otc_items = session.query(Otc).all()
 
-    [otc_item for otc_item in otc_items]
-    id_spaces = 4 - len(str(otc_item.id))
-    name_spaces = 33 - len(otc_item.name)
-    category_spaces = 33 - len(otc_item.category)
-    price_spaces = 8 - len(f'{otc_item.price:.2f}')
-    output_string = f'|{otc_item.id}{" " * id_spaces}|' + \
-    f'{otc_item.name}{" " * name_spaces}|' + \
-    f'${otc_item.price:.2f}{" " * price_spaces}|'
-    print(output_string)
+    for otc_item in otc_items:
+        id_spaces = 4 - len(str(otc_item.id))
+        name_spaces = 26 - len(otc_item.name)
+        category_spaces = 24 - len(otc_item.category)
+        price_spaces = 8 - len(f'{otc_item.price:.2f}')
+        output_string = f'|{otc_item.id}{" " * id_spaces}|' + \
+        f'{otc_item.name}{" " * name_spaces}|' + \
+        f'{otc_item.category}{" " * category_spaces}|' + \
+        f'${otc_item.price:.2f}{" " * price_spaces}|'
+        print(output_string)
+    
     print('-' * 50)
 
     fill_cart()
@@ -455,6 +467,9 @@ def shopping_cart():
     print_1_slowly(shopping_cart_image)
     print('-' * 50)
     print()
+    print('-' * 67)
+    print(f'| ID |{" " * 8}ITEM NAME{" " * 8}|{" " * 8}CATEGORY{" " * 8}|  PRICE  |')
+    print('-' * 67)
     shopping_cart_input = input('enter 1 for Main Menu or 2 for Exit: ')
      
     if shopping_cart_input == '1':
