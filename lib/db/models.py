@@ -1,4 +1,4 @@
-from sqlalchemy import (ForeignKey, Column, Integer,
+from sqlalchemy import (ForeignKey, Column, Integer, Float,
                         String, Numeric, create_engine)
 from sqlalchemy.orm import Session, declarative_base, relationship
 from sqlalchemy.ext.associationproxy import association_proxy
@@ -43,7 +43,16 @@ class Patient(Base):
 class ShoppingCart(Base):
     __tablename__ = 'shopping_carts'
     id = Column(Integer(), primary_key=True)
-
+    script_id = Column(Integer(), ForeignKey('medications.id'))
+    otc_id = Column(Integer(), ForeignKey('otc.id'))
+    name = Column(String())
+    price = Column(Float(precision=8, asdecimal=True, decimal_return_scale=2))
+    
+    def formatted_price(self):
+        return "${:,.2f}".format(self.price)
+    
+    def __repr__(self):
+        return f'Medication:{self.name} Quantity:{self.quantity} Price:{self.formatted_price}'
 
 class Prescription(Base):
     __tablename__ = 'prescriptions'
