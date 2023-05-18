@@ -2,7 +2,7 @@ import sys
 import openai
 from cli import main_menu
 
-openai.api_key = "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"
+openai.api_key = "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"
 
 messages = []
 system_msg = input("Hello! I'm Dr. Walgzbot! Before we start I have to tell you something, ok?\n")
