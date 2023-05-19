@@ -116,10 +116,10 @@ def main_menu():
         print()
         print_1_slowly("1.|   L o g i n")
         print_1_slowly("2.|   S i g n   U p")
-        print_1_slowly("3.|   O v e r   t h e   C o u n t e r")
-        print_1_slowly("4.|   S h o p p i n g   C a r t")
-        print_1_slowly("5.|   D r.  W a l g z b o t")
-        print_1_slowly("6.|   E X I T")
+        # print_1_slowly("3.|   O v e r   t h e   C o u n t e r")
+        # print_1_slowly("4.|   S h o p p i n g   C a r t")
+        print_1_slowly("3.|   D r.  W a l g z b o t")
+        print_1_slowly("4.|   E X I T")
         print()
         print('-' * 50)
         print()
@@ -132,20 +132,29 @@ def main_menu():
         elif main_menu_input == '2':
              sign_up()
 
+        # elif main_menu_input == '3':
+        #      print()
+        #      print_1_slowly("Are you an existing Walgreenz customer?")
+        #      print()
+        #      print_1_slowly("1.  Yes")
+        #      print_1_slowly("2.  No")
+        #      main_menu_3_input = input("")
+        #      if main_menu_3_input == '1':
+        #          login()
+        #      else:
+        #          sign_up()                
+
+        # elif main_menu_input == '4':
+        #     shopping_cart()
+
         elif main_menu_input == '3':
-             otc_menu()
-
-        elif main_menu_input == '4':
-            shopping_cart()
-
-        elif main_menu_input == '5':
             click.clear()
             print(walgzbot_image)
             print('-' * 50)
             print()
             subprocess.run(['python', '/home/s0079376/Development/code/phase-3/Project/pharmacy_project/lib/walgzbot.py'])
 
-        elif main_menu_input == '6':
+        elif main_menu_input == '4':
             click.clear()
             print(walgreenz_image)
             print_4_slowly('T h a n k   y o u   f o r   c h o o s i n g   W a l g r e e n z !')
@@ -203,9 +212,14 @@ def user_login_greeting(session1, patient):
         print_4_slowly("1. View my prescriptions.")
         print()
         print_4_slowly("2. Browse OTC medications.")
+        print()
+        print_4_slowly("3. View my shopping cart.")
+        print()
+        print_4_slowly("4. Main Menu.")
+        print()
         print('-' * 50)
         print()
-        user_login_greeting_input = input('Please enter 1 or 2 to select your option: ')
+        user_login_greeting_input = input('Please enter 1, 2 or 3 to select your option: ')
         print()
         print('-' * 50)
 
@@ -216,6 +230,13 @@ def user_login_greeting(session1, patient):
             print("You are being redirected to the OTC Menu")
             print_4_slowly("." * 50)
             otc_menu(session1, patient)
+
+        elif user_login_greeting_input == '3':
+            shopping_cart(session1, patient)
+
+        elif user_login_greeting_input == '4':
+            session1.close()
+            main_menu(session1, patient)
 
         else:
             print('-' * 50)
@@ -284,9 +305,9 @@ def user_rx(session1, patient):
         print_4_slowly("Thank you for choosing Walgreenz!")
         print()
         print('-' * 50)
-        print("You are being redirected to the Main Menu")
+        print("You are being redirected to the Previous Menu")
         print_4_slowly(".........................................")
-        main_menu()
+        user_login_greeting(session1, patient)
 
 
 
@@ -308,22 +329,36 @@ def rx_menu_input_yes(session1, patient):
 
 
 def sign_up():
-        click.clear()
-        print_1_slowly(sign_up_image)
-        print('-' * 50)
-        print()
-        input('Please  create  your  LOGIN: ')
-        input('Please create your PASSWORD: ')
-        # while not patient:
-            # patient_id = input('Please enter your patient ID: ')
-            # patient = session.query(Patient).filter(Patient.id == patient_id).one_or_none()
-        print_1_slowly('Your account is being created!')
+    click.clear()
+    print_1_slowly(sign_up_image)
+    print('-' * 50)
+    print()
+    username = input('Please enter your USERNAME: ')
+    password = input('Please enter your PASSWORD: ')
+    address = input('Please enter your ADDRESS: ')
+    first_name = input('Please enter your First Name: ')
+    last_name = input('Please enter your Last Name: ')
+
+    new_patient = Patient(username=username, password=password, address=address, first_name=first_name, last_name=last_name)
+
+    session1 = PharmSession()
+    try:
+        session1.add(new_patient)
+        session1.commit()
+        print_1_slowly('Your account has been created!')
         print_4_slowly(".........................................")
         print_1_slowly("Account created!")
-        print("you are being redirected to the login page")
+        print("Please wait.")
         print_8_slowly(".........................................")
-        # user_greeting(patient)
-        login()
+        patient = session1.query(Patient).filter_by(username=username, password=password).one()
+        user_login_greeting(session1, patient)
+        user_rx(session1, patient)
+        rx_menu_input_yes(session1, patient)
+    except Exception as e:
+        session1.rollback()
+        print("Error creating the account:", str(e))
+    finally:
+        user_login_greeting(session1, patient)
 
 
 #//////////////////////////////////////////////////////////////
@@ -349,22 +384,22 @@ def otc_menu(session1, patient):
     otc_menu_input = input("Please enter a number from the menu above: ")
 
     if otc_menu_input == '1':
-        pain_relief()
+        pain_relief(session1, patient)
 
     elif otc_menu_input == '2':
-        allergy_relief()
+        allergy_relief(session1, patient)
 
     elif otc_menu_input == '3':
-        cold_and_flu()
+        cold_and_flu(session1, patient)
 
     elif otc_menu_input == '4':
-        see_all_otc()
+        see_all_otc(session1, patient)
 
     elif otc_menu_input == '5':
-        shopping_cart()
+        shopping_cart(session1, patient)
 
     elif otc_menu_input == '6':
-        main_menu()
+        main_menu(session1, patient)
 
     elif otc_menu_input == '7':
         click.clear()
@@ -382,7 +417,7 @@ def otc_menu(session1, patient):
 
 #//////////////////////pain relief////
 
-def pain_relief():
+def pain_relief(session1, patient):
     click.clear()
     print_1_slowly(pain_relief_image)
     print('-' * 67)
@@ -410,7 +445,7 @@ def pain_relief():
     session2.close()
 #//////////////////////allergy relief////
 
-def allergy_relief():
+def allergy_relief(session1, patient):
     click.clear()
     print_1_slowly(allergy_image)
     print('-' * 67)
@@ -436,7 +471,7 @@ def allergy_relief():
 
 #//////////////////////cold & flu////
 
-def cold_and_flu():
+def cold_and_flu(session1, patient):
     click.clear()
     print_1_slowly(cold_and_flu_image)
     print('-' * 70)
@@ -462,7 +497,7 @@ def cold_and_flu():
 
 #//////////////////////see all otc items////
 
-def see_all_otc():
+def see_all_otc(session1, patient):
     click.clear()
     print_1_slowly(all_items_image)   
     print('-' * 67)
@@ -531,7 +566,7 @@ def otc_fill_cart(otc_item):
 #////                                        shopping cart ////
 #//////////////////////////////////////////////////////////////
 
-def shopping_cart():
+def shopping_cart(session1, patient):
     click.clear()
     print_1_slowly(shopping_cart_image)
     print('-' * 50)
