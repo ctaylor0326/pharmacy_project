@@ -21,12 +21,10 @@ otc_engine = create_engine(f'sqlite:///{otcdb_path}')
 
 OTCSession = sessionmaker(bind=otc_engine)
 PharmSession = sessionmaker(bind=pharmacy_engine)
-# session = OTCSession()
+
+session2 = OTCSession()
 # session = PharmSession()
 
-#//////////////////////////////////////////////////////////////
-#////                                 style and formatting ////
-#//////////////////////////////////////////////////////////////
 def check_db_path():
     phdb_path = '/home/s0079376/Development/code/phase-3/Project/pharmacy_project/lib/db/pharmacy.db'
     print("Database file path:", phdb_path)
@@ -34,6 +32,12 @@ def check_db_path():
         print("Database file exists")
     else:   
         print("Database file does not exist") 
+
+
+#//////////////////////////////////////////////////////////////
+#////                                 style and formatting ////
+#//////////////////////////////////////////////////////////////
+
 
 def print_1_slowly(output):
     for char in output:
@@ -395,7 +399,7 @@ def pain_relief():
     print(f'| ID |{" " * 8}ITEM NAME{" " * 8}|{" " * 8}CATEGORY{" " * 8}|  PRICE  |')
     print('-' * 67)
 
-    otc_items = session.query(Otc).filter_by(category = "Pain Reliever").all()
+    otc_items = session2.query(Otc).filter_by(category = "Pain Reliever").all()
 
     for otc_item in otc_items:
         id_spaces = 4 - len(str(otc_item.id))
@@ -410,8 +414,10 @@ def pain_relief():
 
     print('-' * 50)
 
-    otc_fill_cart(session, otc_item)
+    otc_fill_cart(otc_item)
 
+    session2.commit()
+    session2.close()
 #//////////////////////allergy relief////
 
 def allergy_relief():
@@ -421,7 +427,7 @@ def allergy_relief():
     print(f'| ID |{" " * 8}ITEM NAME{" " * 8}|{" " * 8}CATEGORY{" " * 8}|  PRICE  |')
     print('-' * 67)
 
-    otc_items = session.query(Otc).filter_by(category = "Allergy").all()
+    otc_items = session2.query(Otc).filter_by(category = "Allergy").all()
 
     for otc_item in otc_items:
         id_spaces = 4 - len(str(otc_item.id))
@@ -436,7 +442,7 @@ def allergy_relief():
     
     print('-' * 50)
 
-    otc_fill_cart(session, otc_item)
+    otc_fill_cart(session2, otc_item)
 
 #//////////////////////cold & flu////
 
@@ -447,7 +453,7 @@ def cold_and_flu():
     print(f'| ID |{" " * 8}ITEM NAME{" " * 8}|{" " * 8}CATEGORY{" " * 8}|  PRICE  |')
     print('-' * 70)
 
-    otc_items = session.query(Otc).filter_by(category = "Cold & Flu").all()
+    otc_items = session2.query(Otc).filter_by(category = "Cold & Flu").all()
 
     for otc_item in otc_items:
         id_spaces = 4 - len(str(otc_item.id))
@@ -462,7 +468,7 @@ def cold_and_flu():
     
     print('-' * 50)
 
-    otc_fill_cart(session, otc_item)
+    otc_fill_cart(session2, otc_item)
 
 #//////////////////////see all otc items////
 
@@ -473,7 +479,7 @@ def see_all_otc():
     print(f'| ID |{" " * 8}ITEM NAME{" " * 8}|{" " * 8}CATEGORY{" " * 8}|  PRICE  |')
     print('-' * 67)
 
-    otc_items = session.query(Otc).all()
+    otc_items = session2.query(Otc).all()
 
     for otc_item in otc_items:
         id_spaces = 4 - len(str(otc_item.id))
@@ -488,18 +494,18 @@ def see_all_otc():
     
     print('-' * 50)
 
-    otc_fill_cart(session, otc_item)
+    otc_fill_cart(session2, otc_item)
 
 #//////////////////////////////////////////////////////////////
 #////                                            fill cart ////
 #//////////////////////////////////////////////////////////////
 
-def otc_fill_cart(session, otc_item):
+def otc_fill_cart(otc_item):
     shopping_cart = ShoppingCart()
     otc_item_id = input('Please enter the ID of the item you would like to add to your cart: ')
     cart_total = 0
     while otc_item_id:
-        otc_item = session.query(Otc).filter(Otc.id == otc_item_id).one_or_none()
+        otc_item = session2.query(Otc).filter(Otc.id == otc_item_id).one_or_none()
         if otc_item:
             cart_total += otc_item.price
             print(f'Your cart total is ${cart_total:.2f}')
@@ -527,6 +533,9 @@ def otc_fill_cart(session, otc_item):
 
     else:
         print('Invalid choice. Please try again.')
+
+        session2.commit()
+        session2.close()
 
 #//////////////////////////////////////////////////////////////
 #////                                        shopping cart ////
