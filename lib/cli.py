@@ -1,22 +1,39 @@
-import subprocess
+import subprocess, os
 from ascii import *
 from db.otc import *
 from db.models import *
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
+from sqlalchemy.orm.exc import NoResultFound
 import click
 from tabulate import tabulate
 import time
 import sys
 
-engine = create_engine('sqlite:///otc.db')
-Session = sessionmaker(bind=engine)
-session = Session()
+# Get the absolute path to the directory containing the cli.py file
+base_dir = os.path.abspath(os.path.dirname(__file__))
+# Construct the path to the database file
+pharmdb_path = os.path.join(base_dir, '/home/s0079376/Development/code/phase-3/Project/pharmacy_project/lib/db/pharmacy.db')
+pharmacy_engine = create_engine(f'sqlite:///{pharmdb_path}')
+
+otcdb_path = os.path.join(base_dir, 'otc.db')
+otc_engine = create_engine(f'sqlite:///{otcdb_path}')
+
+OTCSession = sessionmaker(bind=otc_engine)
+PharmSession = sessionmaker(bind=pharmacy_engine)
+# session = OTCSession()
+# session = PharmSession()
 
 #//////////////////////////////////////////////////////////////
 #////                                 style and formatting ////
 #//////////////////////////////////////////////////////////////
-
+def check_db_path():
+    phdb_path = '/home/s0079376/Development/code/phase-3/Project/pharmacy_project/lib/db/pharmacy.db'
+    print("Database file path:", phdb_path)
+    if os.path.isfile(phdb_path):
+        print("Database file exists")
+    else:   
+        print("Database file does not exist") 
 
 def print_1_slowly(output):
     for char in output:
@@ -145,30 +162,48 @@ def login():
         print_1_slowly(login_image)
         print('-' * 50)
         print()
-        input('Please  enter  your  LOGIN: ')
-        input('Please enter your PASSWORD: ')
+        username = input('Please  enter  your  USERNAME: ')
+        password = input('Please enter your PASSWORD: ')
         print()
         print_1_slowly('You are being logged in!')
         print_4_slowly(".........................................")
-        # while not patient:
-            # patient_id = input('Please enter your patient ID: ')
-            # patient = session.query(Patient).filter(Patient.id == patient_id).one_or_none()
+        session = PharmSession()
+        try:
+            # Query the patients table to find a patient with matching login info
+            patient = session.query(Patient).filter_by(username=username, password=password).one()
+
+            # If a patient is found, print a success message
+            print("Login successful!")
+            print(f"Welcome, {patient.first_name} {patient.last_name}!")
+            user_login_greeting(session, patient)
+
+        except NoResultFound:
+            # If no patient is found, print an error message
+            print("Invalid login credentials. Please Sign Up.")
+            print("You are being redirected to the Main Menu")
+            print_4_slowly("." * 50)
+            main_menu()
+            
+        # finally:
+        #     # Close the session
+        #     session.close()
+            
         print()
         # user_greeting(patient)
-        user_login_greeting()
+        
 
 
 #//////////////////////////  user login greeting  ////
 
 # def user_login_greeting(patient):
-def user_login_greeting():
+def user_login_greeting(session, patient):
         click.clear()
         print_1_slowly(welcome_back_image)
         print()
         print('-' * 50)
         print()
         # print_slowly(f'Welcome back, {patient.first_name} {patient.last_name}!')
-        print_4_slowly(f'Welcome back, John Smith!')
+        print_4_slowly(f'Welcome back, {patient.first_name} {patient.last_name}!')
         print()
     #retrieve patient prescriptions
         # script_on_file = session.query(Prescription).filter(Prescription.patient_id == patient.id).one_or_none()
@@ -182,7 +217,7 @@ def user_login_greeting():
 
         if user_login_greeting_input == '1':
             # first_menu_input_yes(script_on_file)
-            user_rx()
+            user_rx(session, patient)
 
         elif user_login_greeting_input == '2':
             print('Thank you for choosing Walgreenz!')
@@ -201,52 +236,76 @@ def user_login_greeting():
 #////////////////////////////////////////////  user prescription screen ////
 
 # def first_menu_input_yes(script_on_file):
-def user_rx():
-        click.clear()
-        print_1_slowly(prescriptions_image)
-        print('-' * 50)
-        print()
-        print()
-        # medication = session.query(Medication).filter(Medication.id == script_on_file.prescription_id).one_or_none()
-        # print(f'{medication.name} {medication.dosage} {medication.quantity} {medication.price}')
-        print_4_slowly(f'1.|   Lipitor   |   20mg   |   30   |   $10.00   |')
-        print()
-        print()
-        print('-' * 50)
-        # print(f'Would you like to fill your prescription for {medication.name}?')
-        print_1_slowly('Would you like to fill your prescription for Lipitor?')
-        print()
-        print('-' * 50)
-        user_rx_input = input('Please enter 1 for yes or 2 for no: ')
+def user_rx(session, patient):
+    click.clear()
+    print_1_slowly(prescriptions_image)
+    print('-' * 50)
+    print()
+    print()
 
-        if user_rx_input == '1':
-            # second_menu_input_yes(medication)
-            rx_menu_input_yes()
+    # Retrieve the patient's prescriptions
+    prescriptions = session.query(Prescription).filter(Prescription.patient_id == patient.id).all()
 
-        elif user_rx_input == '2':
-            print('Your prescription will not be filled.')
+    if prescriptions:
+        # Create a numbered list of medications
+        medications_list = []
+        for index, prescription in enumerate(prescriptions, start=1):
+            medication = session.query(Medication).filter(Medication.id == prescription.medication_id).one_or_none()
+            if medication:
+                medication_info = f'{medication.name} {medication.type} {medication.dosage} {medication.quantity} {medication.price}'
+                medications_list.append(f'{index}. {medication_info}')
+
+        # Print the numbered list of medications
+        for medication_item in medications_list:
+            print_4_slowly(medication_item)
             print()
-            print_8_slowly('Thank you for choosing Walgreenz!')
-            print()
-            print('-' * 50)
-            print("You are being redirected to the Main Menu")
-            print_4_slowly(".........................................")
-            main_menu()
 
+        # After printing the medications, prompt the user for further actions
+        print('-' * 50)
+        print_1_slowly('Would you like to fill any of your prescriptions today?')
+        print()
+        print('-' * 50)
+        user_rx_input = input('Please enter the number of the medication or 0 to cancel: ')
+
+        if user_rx_input.isdigit():
+            medication_index = int(user_rx_input)
+            if 1 <= medication_index <= len(medications_list):
+                rx_menu_input_yes(session, patient)
+            elif medication_index == 0:
+                print('You have canceled the prescription fill.')
+                print()
+                print_8_slowly('Thank you for choosing Walgreenz!')
+                print()
+                print('-' * 50)
+                print("You are being redirected to the Main Menu")
+                print_4_slowly(".........................................")
+                main_menu()
+            else:
+                print('Invalid medication number. Please try again.')
         else:
-            print('Invalid choice. Please try again.')
+            print('Invalid input. Please try again.')
+    else:
+        # If no prescriptions are found for the patient
+        print_4_slowly("You have no prescriptions on file.")
+        print()
+        print_4_slowly("Thank you for choosing Walgreenz!")
+        print()
+        print('-' * 50)
+        print("You are being redirected to the Main Menu")
+        print_4_slowly(".........................................")
+        main_menu()
+
 
 
 # def second_menu_input_yes(medication):
-def rx_menu_input_yes():
+def rx_menu_input_yes(session, patient):
         # print(f'Your {medication.name} prescriptions will be ready for pick up in 15 minutes.')
-        print('Your Lipitor prescriptions will be ready for pick up in 45 minutes.')
+        print_8_slowly('Your prescriptions will be ready for pick up in 45 minutes.')
         print()
-        print_1_slowly('Thank you for choosing Walgreenz!')
-        print
-        print_1_slowly("You are being redirected to the Main Menu")
+        print_4_slowly('Thank you for choosing Walgreenz!')
+        print()
         print_4_slowly("." * 50)
-        main_menu()
+        user_rx(session, patient)
 
 
 #//////////////////////////////////////////////////////////////
@@ -503,4 +562,5 @@ def shopping_cart():
 
 
 if __name__ == '__main__':
+    # check_db_path()
     pre_menu()
