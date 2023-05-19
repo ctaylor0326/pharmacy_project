@@ -366,7 +366,7 @@ def sign_up():
 #//////////////////////////////////////////////////////////////
 
 
-def otc_menu(session1, patient):
+def otc_menu(session1, patient, session2):
     click.clear()
     print_1_slowly(over_the_counter_image)
     print('-' * 50)
@@ -424,6 +424,8 @@ def pain_relief(session1, patient):
     print(f'| ID |{" " * 8}ITEM NAME{" " * 8}|{" " * 8}CATEGORY{" " * 8}|  PRICE  |')
     print('-' * 67)
 
+    session2 = OTCSession()
+
     otc_items = session2.query(Otc).filter_by(category = "Pain Reliever").all()
 
     for otc_item in otc_items:
@@ -441,11 +443,10 @@ def pain_relief(session1, patient):
 
     otc_fill_cart(otc_item)
 
-    session2.commit()
-    session2.close()
+    
 #//////////////////////allergy relief////
 
-def allergy_relief(session1, patient):
+def allergy_relief(session1, session2, patient):
     click.clear()
     print_1_slowly(allergy_image)
     print('-' * 67)
@@ -471,7 +472,7 @@ def allergy_relief(session1, patient):
 
 #//////////////////////cold & flu////
 
-def cold_and_flu(session1, patient):
+def cold_and_flu(session1, session2, patient):
     click.clear()
     print_1_slowly(cold_and_flu_image)
     print('-' * 70)
@@ -497,7 +498,7 @@ def cold_and_flu(session1, patient):
 
 #//////////////////////see all otc items////
 
-def see_all_otc(session1, patient):
+def see_all_otc(session1, session2, patient):
     click.clear()
     print_1_slowly(all_items_image)   
     print('-' * 67)
@@ -525,7 +526,7 @@ def see_all_otc(session1, patient):
 #////                                            fill cart ////
 #//////////////////////////////////////////////////////////////
 
-def otc_fill_cart(otc_item):
+def otc_fill_cart(session2, otc_item):
     shopping_cart = ShoppingCart()
     otc_item_id = input('Please enter the ID of the item you would like to add to your cart: ')
     cart_total = 0
