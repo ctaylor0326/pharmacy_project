@@ -143,7 +143,7 @@ def main_menu():
             print(walgzbot_image)
             print('-' * 50)
             print()
-            subprocess.run(['python', 'lib/walgzbot.py'])
+            subprocess.run(['python', '/home/s0079376/Development/code/phase-3/Project/pharmacy_project/lib/walgzbot.py'])
 
         elif main_menu_input == '6':
             click.clear()
