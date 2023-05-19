@@ -41,6 +41,7 @@ class Patient(Base):
     last_name = Column(String())
     first_name = Column(String())
     address = Column(String())
+    username = Column(String())
     password = Column(String())
     prescriptions = relationship('Prescription', back_populates='patient')
     medications = association_proxy(
