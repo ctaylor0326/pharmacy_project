@@ -109,6 +109,7 @@ def pre_menu():
 
 
 def main_menu():
+        shopping_cart = []
         click.clear()
         print_1_slowly(main_menu_image)       
         print('-' * 50)
@@ -126,10 +127,10 @@ def main_menu():
         print('-' * 50)
 
         if main_menu_input == '1':
-            login()
+            login(shopping_cart)
 
         elif main_menu_input == '2':
-             sign_up()
+             sign_up(shopping_cart)
 
         # elif main_menu_input == '3':
         #      print()
@@ -170,7 +171,7 @@ def main_menu():
 
 #//////////////////////////  login  ////
 
-def login():
+def login(shopping_cart):
         click.clear()
         print_1_slowly(login_image)
         print('-' * 50)
@@ -187,7 +188,7 @@ def login():
           
             print("Login successful!")
             print(f"Welcome, {patient.first_name} {patient.last_name}!")
-            user_login_greeting(session1, session2, patient)
+            user_login_greeting(session1, session2, patient, shopping_cart)
 
         except NoResultFound:
             print("Invalid login credentials. Please Sign Up.")
@@ -198,7 +199,7 @@ def login():
 
 #//////////////////////////  user login greeting  ////
 
-def user_login_greeting(session1, session2, patient):
+def user_login_greeting(session1, session2, patient, shopping_cart):
         click.clear()
         print_1_slowly(welcome_back_image)
         print()
@@ -219,20 +220,20 @@ def user_login_greeting(session1, session2, patient):
         print()
         print('-' * 50)
         print()
-        user_login_greeting_input = input('Please enter 1, 2 or 3 to select your option: ')
+        user_login_greeting_input = input('Please enter 1, 2, 3 or 4 to select your option: ')
         print()
         print('-' * 50)
 
         if user_login_greeting_input == '1':
-            user_rx(session1, session2, patient)
+            user_rx(session1, session2, patient,shopping_cart)
 
         elif user_login_greeting_input == '2':
             print("You are being redirected to the OTC Menu")
             print_4_slowly("." * 50)
-            otc_menu(session1, session2, patient)
+            otc_menu(session1, session2, patient,shopping_cart)
 
         elif user_login_greeting_input == '3':
-            shopping_cart(session1, session2, patient)
+            shopping_cart(session1, session2, patient, shopping_cart)
 
         elif user_login_greeting_input == '4':
             session1.close()
@@ -249,7 +250,7 @@ def user_login_greeting(session1, session2, patient):
 #////////////////////////////////////////////  user prescription screen ////
 
 #directed from user_login_greeting 
-def user_rx(session1, session2, patient):
+def user_rx(session1, session2, patient, shopping_cart):
     click.clear()
     print_1_slowly(prescriptions_image)
     print('-' * 50)
@@ -283,7 +284,7 @@ def user_rx(session1, session2, patient):
         if user_rx_input.isdigit():
             medication_index = int(user_rx_input)
             if 1 <= medication_index <= len(medications_list):
-                rx_menu_input_yes(session1, session2, patient)
+                rx_menu_input_yes(session1, session2, patient, shopping_cart)
             elif medication_index == 0:
                 print()
                 print_1_slowly('You have canceled the prescription fill.')
@@ -293,7 +294,7 @@ def user_rx(session1, session2, patient):
                 print('-' * 50)
                 print("You are being redirected to the Previous Menu")
                 print_4_slowly(".........................................")
-                user_login_greeting(session1, session2, patient)
+                user_login_greeting(session1, session2, patient, shopping_cart)
             else:
                 print('Invalid medication number. Please try again.')
         else:
@@ -307,12 +308,12 @@ def user_rx(session1, session2, patient):
         print('-' * 50)
         print("You are being redirected to the Previous Menu")
         print_4_slowly(".........................................")
-        user_login_greeting(session1, session2, patient)
+        user_login_greeting(session1, session2, patient, shopping_cart)
 
 
 
 # def second_menu_input_yes(medication):
-def rx_menu_input_yes(session1, session2, patient):
+def rx_menu_input_yes(session1, session2, patient, shopping_cart):
         print()
         print()
         print_8_slowly('Your prescriptions will be ready for pick up in 45 minutes.')
@@ -320,7 +321,7 @@ def rx_menu_input_yes(session1, session2, patient):
         print_4_slowly('Thank you for choosing Walgreenz!')
         print()
         print_4_slowly("." * 50)
-        user_rx(session1, session2, patient)
+        user_rx(session1, session2, patient, shopping_cart)
 
 
 #//////////////////////////////////////////////////////////////
@@ -328,7 +329,7 @@ def rx_menu_input_yes(session1, session2, patient):
 #//////////////////////////////////////////////////////////////
 
 
-def sign_up():
+def sign_up(shopping_cart):
     click.clear()
     print_1_slowly(sign_up_image)
     print('-' * 50)
@@ -356,7 +357,7 @@ def sign_up():
         session1.rollback()
         print("Error creating the account:", str(e))
     finally:
-        user_login_greeting(session1, session2, patient)
+        user_login_greeting(session1, session2, patient, shopping_cart)
 
 
 #//////////////////////////////////////////////////////////////
@@ -364,7 +365,7 @@ def sign_up():
 #//////////////////////////////////////////////////////////////
 
 
-def otc_menu(session1, patient, session2):
+def otc_menu(session1, session2, patient, shopping_cart):
     click.clear()
     print_1_slowly(over_the_counter_image)
     print('-' * 50)
@@ -382,22 +383,22 @@ def otc_menu(session1, patient, session2):
     otc_menu_input = input("Please enter a number from the menu above: ")
 
     if otc_menu_input == '1':
-        pain_relief(session1, session2, patient)
+        pain_relief(session1, session2, patient, shopping_cart)
 
     elif otc_menu_input == '2':
-        allergy_relief(session1, session2, patient)
+        allergy_relief(session1, session2, patient, shopping_cart)
 
     elif otc_menu_input == '3':
-        cold_and_flu(session1, session2, patient)
+        cold_and_flu(session1, session2, patient, shopping_cart)
 
     elif otc_menu_input == '4':
-        see_all_otc(session1, session2, patient)
+        see_all_otc(session1, session2, patient, shopping_cart)
 
     elif otc_menu_input == '5':
-        shopping_cart(session1, session2, patient)
+        shopping_cart(session1, session2, patient, shopping_cart)
 
     elif otc_menu_input == '6':
-        main_menu(session1, session2, patient)
+        main_menu(session1, session2, patient, shopping_cart)
 
     elif otc_menu_input == '7':
         click.clear()
@@ -415,30 +416,41 @@ def otc_menu(session1, patient, session2):
 
 #//////////////////////pain relief////
 
-def pain_relief(session1, session2, patient):
+def pain_relief(session1, session2, patient, shopping_cart):
     click.clear()
     print_1_slowly(pain_relief_image)
     print('-' * 67)
     print(f'| ID |{" " * 8}ITEM NAME{" " * 8}|{" " * 8}CATEGORY{" " * 8}|  PRICE  |')
     print('-' * 67)
 
-    
-    otc_items = session2.query(Otc).filter_by(category = "Pain Reliever").all()
+    otc_items = session2.query(Otc).filter_by(category="Pain Reliever").all()
 
-    for otc_item in otc_items:
-        id_spaces = 4 - len(str(otc_item.id))
+    item_variables = {}
+    for i, otc_item in enumerate(otc_items, start=1):
         name_spaces = 26 - len(otc_item.name)
         category_spaces = 24 - len(otc_item.category)
         price_spaces = 8 - len(f'{otc_item.price:.2f}')
-        output_string = f'|{otc_item.id}{" " * id_spaces}|' + \
-        f'{otc_item.name}{" " * name_spaces}|' + \
-        f'{otc_item.category}{" " * category_spaces}|' + \
-        f'${otc_item.price:.2f}{" " * price_spaces}|'
+        output_string = f'| {i:<3} |' + \
+                        f'{otc_item.name}{" " * name_spaces}|' + \
+                        f'{otc_item.category}{" " * category_spaces}|' + \
+                        f' ${otc_item.price:.2f}{" " * price_spaces}|'
         print(output_string)
 
-    print('-' * 50)
+        item_variables[str(i)] = otc_item  # Assign each item to a variable based on its number
 
-    otc_fill_cart(otc_item)
+    print('-' * 67)
+
+    user_input = input("Please enter the number of the item you want to select: ")
+
+    otc_item = item_variables.get(user_input)
+    if otc_item is not None:
+        print(f"You have selected: {otc_item.name}")
+        shopping_cart.append(otc_item)
+    else:
+        print("Invalid input. Please try again.")
+
+    check_out(session1, session2, patient, shopping_cart)
+
 
     
 #//////////////////////allergy relief////
@@ -452,20 +464,19 @@ def allergy_relief(session1, session2, patient):
 
     otc_items = session2.query(Otc).filter_by(category = "Allergy").all()
 
-    for otc_item in otc_items:
-        id_spaces = 4 - len(str(otc_item.id))
+    for i, otc_item in enumerate(otc_items, start=1):
         name_spaces = 26 - len(otc_item.name)
         category_spaces = 24 - len(otc_item.category)
         price_spaces = 8 - len(f'{otc_item.price:.2f}')
-        output_string = f'|{otc_item.id}{" " * id_spaces}|' + \
-        f'{otc_item.name}{" " * name_spaces}|' + \
-        f'{otc_item.category}{" " * category_spaces}|' + \
-        f'${otc_item.price:.2f}{" " * price_spaces}|'
+        output_string = f'| {i:<3} |' + \
+                        f'{otc_item.name}{" " * name_spaces}|' + \
+                        f'{otc_item.category}{" " * category_spaces}|' + \
+                        f' ${otc_item.price:.2f}{" " * price_spaces}|'
         print(output_string)
-    
-    print('-' * 50)
 
-    otc_fill_cart(session2, otc_item)
+    print('-' * 67)
+
+    otc_fill_cart(session1, session2, patient, otc_item)
 
 #//////////////////////cold & flu////
 
@@ -478,20 +489,18 @@ def cold_and_flu(session1, session2, patient):
 
     otc_items = session2.query(Otc).filter_by(category = "Cold & Flu").all()
 
-    for otc_item in otc_items:
-        id_spaces = 4 - len(str(otc_item.id))
+    for i, otc_item in enumerate(otc_items, start=1):
         name_spaces = 26 - len(otc_item.name)
         category_spaces = 24 - len(otc_item.category)
         price_spaces = 8 - len(f'{otc_item.price:.2f}')
-        output_string = f'|{otc_item.id}{" " * id_spaces}|' + \
-        f'{otc_item.name}{" " * name_spaces}|' + \
-        f'{otc_item.category}{" " * category_spaces}|' + \
-        f'${otc_item.price:.2f}{" " * price_spaces}|'
+        output_string = f'| {i:<3} |' + \
+                        f'{otc_item.name}{" " * name_spaces}|' + \
+                        f'{otc_item.category}{" " * category_spaces}|' + \
+                        f' ${otc_item.price:.2f}{" " * price_spaces}|'
         print(output_string)
-    
-    print('-' * 50)
 
-    otc_fill_cart(session2, otc_item)
+    print('-' * 67)
+    otc_fill_cart(session1, session2, patient, otc_item)
 
 #//////////////////////see all otc items////
 
@@ -504,28 +513,26 @@ def see_all_otc(session1, session2, patient):
 
     otc_items = session2.query(Otc).all()
 
-    for otc_item in otc_items:
-        id_spaces = 4 - len(str(otc_item.id))
+    for i, otc_item in enumerate(otc_items, start=1):
         name_spaces = 26 - len(otc_item.name)
         category_spaces = 24 - len(otc_item.category)
         price_spaces = 8 - len(f'{otc_item.price:.2f}')
-        output_string = f'|{otc_item.id}{" " * id_spaces}|' + \
-        f'{otc_item.name}{" " * name_spaces}|' + \
-        f'{otc_item.category}{" " * category_spaces}|' + \
-        f'${otc_item.price:.2f}{" " * price_spaces}|'
+        output_string = f'| {i:<3} |' + \
+                        f'{otc_item.name}{" " * name_spaces}|' + \
+                        f'{otc_item.category}{" " * category_spaces}|' + \
+                        f' ${otc_item.price:.2f}{" " * price_spaces}|'
         print(output_string)
-    
-    print('-' * 50)
 
-    otc_fill_cart(session2, otc_item)
+    print('-' * 67)
+
+    otc_fill_cart(session1, session2, patient, otc_item)
 
 #//////////////////////////////////////////////////////////////
 #////                                            fill cart ////
 #//////////////////////////////////////////////////////////////
 
-def otc_fill_cart(session2, otc_item):
+def otc_fill_cart(session1, session2, patient, otc_item):
     shopping_cart = ShoppingCart()
-    otc_item_id = input('Please enter the ID of the item you would like to add to your cart: ')
     cart_total = 0
     while otc_item_id:
         otc_item = session2.query(Otc).filter(Otc.id == otc_item_id).one_or_none()
@@ -564,7 +571,7 @@ def otc_fill_cart(session2, otc_item):
 #////                                        shopping cart ////
 #//////////////////////////////////////////////////////////////
 
-def shopping_cart(session1, patient):
+def check_out(session1, session2, patient, shopping_cart):
     click.clear()
     print_1_slowly(shopping_cart_image)
     print('-' * 50)
@@ -572,20 +579,39 @@ def shopping_cart(session1, patient):
     print('-' * 67)
     print(f'| ID |{" " * 8}ITEM NAME{" " * 8}|{" " * 8}CATEGORY{" " * 8}|  PRICE  |')
     print('-' * 67)
-    shopping_cart_input = input('enter 1 for Main Menu or 2 for Exit: ')
+    
+    total_price = 0
+    
+    for item in shopping_cart:
+        print(f'| {item.id:<3} | {item.name:<26} | {item.category:<24} | ${item.price:.2f}{" " * (8 - len(f"{item.price:.2f}"))} |')
+        total_price += item.price
+    
+    print('-' * 67)
+    print(f'Total Price: ${total_price:.2f}')
+    print()
+    
+    print_1_slowly("1.|   Continue Browsing OTC Menu")
+    print_1_slowly("2.|   Return to Prescriptions")
+    print_1_slowly("3.|   Main Menu")
+
+    shopping_cart_input = input('Enter 1 to contiue browsing or 2 for Exit: ')
      
     if shopping_cart_input == '1':
-          main_menu()
+        otc_menu(session1, session2, patient, shopping_cart)
 
-    elif shopping_cart_input == '2':
+    if shopping_cart_input == '2':
+        user_rx(session1, session2, patient, shopping_cart)
+
+    elif shopping_cart_input == '3':
         click.clear()
         print(walgreenz_image)
         print_4_slowly('T h a n k   y o u   f o r   c h o o s i n g   W a l g r e e n z !')
         print_8_slowly("                    G o o d b y e !")
-        exit()
+        user_login_greeting()
 
     else:
         print('Invalid choice. Please try again.')
+
 
 
 #/////////////////////////////////////////////////////////////
