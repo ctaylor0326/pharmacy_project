@@ -50,6 +50,21 @@ class Patient(Base):
     def __repr__(self):
         return f'{self.first_name} {self.last_name})'
 
+
+class ShoppingCart(Base):
+    __tablename__ = 'shopping_carts'
+    id = Column(Integer(), primary_key=True)
+    script_id = Column(Integer(), ForeignKey('medications.id'))
+    # otc_id = Column(Integer(), ForeignKey('otc.id'))
+    name = Column(String())
+    price = Column(Float(precision=8, asdecimal=True, decimal_return_scale=2))
+    
+    def formatted_price(self):
+        return "${:,.2f}".format(self.price)
+    
+    def __repr__(self):
+        return f'Medication:{self.name} Quantity:{self.quantity} Price:{self.formatted_price}'
+
 class Prescription(Base):
     __tablename__ = 'prescriptions'
     id = Column(Integer(), primary_key=True)
@@ -58,28 +73,6 @@ class Prescription(Base):
     patient = relationship('Patient', back_populates='prescriptions')
     medication = relationship('Medication', back_populates='prescriptions')
 
-class Otc(Base):
-    __tablename__ = 'otc'
-    id = Column(Integer, primary_key=True)
-    name = Column(String)
-    category = Column(String)
-    price = Column(Float(precision=8, asdecimal=True, decimal_return_scale=2))
-    
-    def formatted_price(self):
-        return "${:,.2f}".format(self.price)
-    
-    def __repr__(self):
-        return f'Otc_item:{self.name} Category:{self.category} Price:{self.formatted_price}'
-    
-
-class ShoppingCart(Base):
-    __tablename__ = 'shopping_carts'
-    id = Column(Integer, primary_key=True)
-    patient_id = Column(Integer, ForeignKey('patients.id'))
-    item_id = Column(Integer, ForeignKey('otc_items.id'))
-    name = Column(String)
-    category = Column(String)
-    price = Column(Float(precision=8, asdecimal=True, decimal_return_scale=2))
 
 def create_tables():
     # create the engine and tables based on parent base

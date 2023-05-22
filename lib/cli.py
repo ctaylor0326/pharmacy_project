@@ -12,7 +12,7 @@ import sys
 # Get the absolute path to the directory containing the cli.py file
 base_dir = os.path.abspath(os.path.dirname(__file__))
 # Construct the path to the database file
-pharmdb_path = os.path.join(base_dir, '/home/s0079376/Development/code/phase-3/Project/pharmacy_project/lib/db/pharmacy.db')
+pharmdb_path = os.path.join(base_dir, '/Users/mattroche/Development/code/phase-3/pharmacy_project/lib/db/pharmacy.db')
 pharmacy_engine = create_engine(f'sqlite:///{pharmdb_path}')
 
 otcdb_path = os.path.join(base_dir, 'otc.db')
@@ -26,7 +26,7 @@ PharmSession = sessionmaker(bind=pharmacy_engine)
 
 
 def check_db_path():
-    phdb_path = '/home/s0079376/Development/code/phase-3/Project/pharmacy_project/lib/db/pharmacy.db'
+    phdb_path = '/Users/mattroche/Development/code/phase-3/pharmacy_project/lib/db/pharmacy.db'
     print("Database file path:", phdb_path)
     if os.path.isfile(phdb_path):
         print("Database file exists")
@@ -233,7 +233,7 @@ def user_login_greeting(session1, session2, patient, shopping_cart):
             otc_menu(session1, session2, patient,shopping_cart)
 
         elif user_login_greeting_input == '3':
-            shopping_cart(session1, session2, patient, shopping_cart)
+            check_out(session1, session2, patient, shopping_cart)
 
         elif user_login_greeting_input == '4':
             session1.close()
@@ -455,7 +455,7 @@ def pain_relief(session1, session2, patient, shopping_cart):
     
 #//////////////////////allergy relief////
 
-def allergy_relief(session1, session2, patient):
+def allergy_relief(session1, session2, patient, shopping_cart):
     click.clear()
     print_1_slowly(allergy_image)
     print('-' * 67)
@@ -464,6 +464,7 @@ def allergy_relief(session1, session2, patient):
 
     otc_items = session2.query(Otc).filter_by(category = "Allergy").all()
 
+    item_variables = {}
     for i, otc_item in enumerate(otc_items, start=1):
         name_spaces = 26 - len(otc_item.name)
         category_spaces = 24 - len(otc_item.category)
@@ -474,13 +475,24 @@ def allergy_relief(session1, session2, patient):
                         f' ${otc_item.price:.2f}{" " * price_spaces}|'
         print(output_string)
 
+        item_variables[str(i)] = otc_item  # Assign each item to a variable based on its number
+
     print('-' * 67)
 
-    otc_fill_cart(session1, session2, patient, otc_item)
+    user_input = input("Please enter the number of the item you want to select: ")
+
+    otc_item = item_variables.get(user_input)
+    if otc_item is not None:
+        print(f"You have selected: {otc_item.name}")
+        shopping_cart.append(otc_item)
+    else:
+        print("Invalid input. Please try again.")
+
+    check_out(session1, session2, patient, shopping_cart)
 
 #//////////////////////cold & flu////
 
-def cold_and_flu(session1, session2, patient):
+def cold_and_flu(session1, session2, patient, shopping_cart):
     click.clear()
     print_1_slowly(cold_and_flu_image)
     print('-' * 70)
@@ -489,6 +501,7 @@ def cold_and_flu(session1, session2, patient):
 
     otc_items = session2.query(Otc).filter_by(category = "Cold & Flu").all()
 
+    item_variables = {}
     for i, otc_item in enumerate(otc_items, start=1):
         name_spaces = 26 - len(otc_item.name)
         category_spaces = 24 - len(otc_item.category)
@@ -499,12 +512,24 @@ def cold_and_flu(session1, session2, patient):
                         f' ${otc_item.price:.2f}{" " * price_spaces}|'
         print(output_string)
 
+        item_variables[str(i)] = otc_item  # Assign each item to a variable based on its number
+
     print('-' * 67)
-    otc_fill_cart(session1, session2, patient, otc_item)
+
+    user_input = input("Please enter the number of the item you want to select: ")
+
+    otc_item = item_variables.get(user_input)
+    if otc_item is not None:
+        print(f"You have selected: {otc_item.name}")
+        shopping_cart.append(otc_item)
+    else:
+        print("Invalid input. Please try again.")
+
+    check_out(session1, session2, patient, shopping_cart)
 
 #//////////////////////see all otc items////
 
-def see_all_otc(session1, session2, patient):
+def see_all_otc(session1, session2, patient, shopping_cart):
     click.clear()
     print_1_slowly(all_items_image)   
     print('-' * 67)
@@ -513,6 +538,7 @@ def see_all_otc(session1, session2, patient):
 
     otc_items = session2.query(Otc).all()
 
+    item_variables = {}
     for i, otc_item in enumerate(otc_items, start=1):
         name_spaces = 26 - len(otc_item.name)
         category_spaces = 24 - len(otc_item.category)
@@ -523,9 +549,20 @@ def see_all_otc(session1, session2, patient):
                         f' ${otc_item.price:.2f}{" " * price_spaces}|'
         print(output_string)
 
+        item_variables[str(i)] = otc_item  # Assign each item to a variable based on its number
+
     print('-' * 67)
 
-    otc_fill_cart(session1, session2, patient, otc_item)
+    user_input = input("Please enter the number of the item you want to select: ")
+
+    otc_item = item_variables.get(user_input)
+    if otc_item is not None:
+        print(f"You have selected: {otc_item.name}")
+        shopping_cart.append(otc_item)
+    else:
+        print("Invalid input. Please try again.")
+
+    check_out(session1, session2, patient, shopping_cart)
 
 #//////////////////////////////////////////////////////////////
 #////                                            fill cart ////
