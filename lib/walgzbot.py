@@ -1,11 +1,11 @@
 import os
 import sys
 import openai
-import config
+# import config
 from cli import main_menu
 
 
-openai.api_key = config.API_KEY
+openai.api_key = "API_KEY"
 
 messages = []
 system_msg = input("Hello! I'm Dr. Walgzbot! Before we start I have to tell you something, ok?\n")

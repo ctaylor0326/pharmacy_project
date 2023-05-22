@@ -28,4 +28,3 @@ def generate_prescriptions():
         session.commit()
 
 generate_prescriptions()
-
